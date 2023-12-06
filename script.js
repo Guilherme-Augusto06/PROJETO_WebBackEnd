@@ -1,6 +1,7 @@
 // script.js
 document.addEventListener('DOMContentLoaded', function() {
 // Função para carregar as despesas na tabela
+
 async function carregarDespesas() {
     try {
         // Carrega as despesas
@@ -50,7 +51,48 @@ async function carregarDespesas() {
 // Função para excluir uma despesa
 // Função para excluir uma despesa
 
+async function carregarGrafico() {
+    try {
+        // Carrega o total de despesas
+        const responseTotalDespesas = await axios.get('http://127.0.0.1:5000/sum');
+        const totalDespesas = responseTotalDespesas.data.total;
 
+        // Carrega o salário
+        const responseSalario = await axios.get('http://127.0.0.1:5000/list_salary');
+        const salario = responseSalario.data[0]; // Assume que há apenas um salário na lista
+
+        // Calcula o restante do salário após despesas
+        const restanteSalario = salario.SALARIO - totalDespesas;
+
+        // Obtém o contexto do canvas
+        const ctx = document.getElementById('donutChart').getContext('2d');
+
+        // Cria o gráfico de rosca
+        const myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Salário', 'Despesas'],
+                datasets: [{
+                    data: [salario.SALARIO, totalDespesas],
+                    backgroundColor: ['rgba(153, 102, 255, 0.8)', 'rgba(75, 192, 192, 0.8)'],
+                }],
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                    },
+                },
+            },
+        });
+    } catch (error) {
+        console.error('Erro ao carregar gráfico:', error.message);
+    }
+}
+
+// Carrega o gráfico ao carregar a página
+carregarGrafico();
 // Função para adicionar uma nova despesa
 // Função para adicionar uma nova despesa
 async function adicionarDespesa() {
