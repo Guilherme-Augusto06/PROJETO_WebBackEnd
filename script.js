@@ -1,5 +1,5 @@
 // script.js
-
+document.addEventListener('DOMContentLoaded', function() {
 // Função para carregar as despesas na tabela
 async function carregarDespesas() {
     try {
@@ -45,80 +45,112 @@ async function carregarDespesas() {
 
 
 // Função para editar uma despesa
-async function editarDespesa(id, despesaAtual, valorAtual) {
-  const novoDespesa = prompt('Digite a nova despesa:', despesaAtual);
-  const novoValor = parseFloat(prompt('Digite o novo valor:', valorAtual).replace(',', '.'));
 
-  if (!novoDespesa || isNaN(novoValor)) {
-      alert('Preencha os campos corretamente.');
-      return;
-  }
-
-  try {
-      const response = await axios.put(`http://127.0.0.1:5000/update/${id}`, { despesa: novoDespesa, valor: novoValor });
-      console.log(response.data);
-
-      // Recarrega a tabela
-      carregarDespesas();
-  } catch (error) {
-      console.error('Erro ao editar despesa:', error.message);
-  }
-}
 
 // Função para excluir uma despesa
 // Função para excluir uma despesa
-function excluirDespesa(id) {
-  // Mostra uma caixa de diálogo de confirmação
-  const confirmacao = window.confirm('Deseja realmente excluir esta despesa?');
 
-  // Se o usuário confirmar, prossegue com a exclusão
-  if (confirmacao) {
-      axios.delete('http://127.0.0.1:5000/delete', { data: { id } })
-          .then(function (response) {
-              console.log(response.data);
-
-              // Recarrega a tabela
-              carregarDespesas();
-          })
-          .catch(function (error) {
-              console.error('Erro ao excluir despesa:', error.message);
-          });
-  }
-}
 
 // Função para adicionar uma nova despesa
+// Função para adicionar uma nova despesa
 async function adicionarDespesa() {
-  const despesaInput = document.querySelector("#recipient-name");
-  const valorInput = document.querySelector("#recipient-valor");
+    const despesaInput = document.querySelector("#recipient-name");
+    const valorInput = document.querySelector("#recipient-valor");
+    const errorMessage = document.getElementById('error-message');
 
-  const despesa = despesaInput.value;
-  const valor = parseFloat(valorInput.value.replace(',', '.'));
+    const despesa = despesaInput.value;
+    const valor = parseFloat(valorInput.value.replace(',', '.'));
 
-  if (!despesa || isNaN(valor)) {
-    alert('Preencha os campos corretamente.');
-    return;
-  }
+    if (!despesa || isNaN(valor)) {
+        errorMessage.innerText = 'Preencha os campos corretamente.';
+        return;
+    }
 
-  try {
-    const response = await axios.post(`http://127.0.0.1:5000/add`, { despesa: despesa, valor: valor });
-    console.log(response.data);
+    try {
+        // Obtém o salário atual
+        const responseSalario = await axios.get('http://127.0.0.1:5000/list_salary');
+        const salario = responseSalario.data[0]; // Assume que há apenas um salário na lista
+        // Verifica se o salário é suficiente para cobrir a despesa
+        if (salario.SALARIO < valor) {
+            errorMessage.innerText = 'Salário insuficiente para cobrir a despesa.';
+            return;
+        }
 
-    // Recarrega a tabela
-    carregarDespesas();
+        // Adiciona a nova despesa ao servidor
+        const response = await axios.post(`http://127.0.0.1:5000/add`, { despesa: despesa, valor: valor });
+        console.log(response.data);
 
-    // Limpa os campos de entrada após adicionar a despesa
-    despesaInput.value = '';
-    valorInput.value = '';
+        // Recarrega a tabela
+        carregarDespesas();
 
-    // Fecha o modal de adicionar despesa
-    const modal = new bootstrap.Modal(document.getElementById('Modal3'));
-    modal.hide();
-  } catch (error) {
-    console.error('Erro ao adicionar despesa:', error.message);
-  }
+        // Limpa os campos de entrada após adicionar a despesa
+        despesaInput.value = '';
+        valorInput.value = '';
+
+        // Fecha o modal de adicionar despesa
+        const modal = new bootstrap.Modal(document.getElementById('Modal3'));
+        modal.hide();
+
+        // Limpa a mensagem de erro
+        errorMessage.innerText = '';
+
+        // Recarrega a página
+        location.reload();
+    } catch (error) {
+        console.error('Erro ao adicionar despesa:', error.message);
+    }
 }
+// Exibir gastos mensais, somente um get com soma de todos os valores
+
+
+
 // Função para editar o salário
-async function editarSalario() {
+
+
+// Carrega as despesas ao carregar a página
+carregarDespesas();
+// Adiciona um ouvinte de evento ao botão de adicionar no modal
+document.querySelector("#addDespesaBtn").addEventListener("click", adicionarDespesa);
+
+});
+function excluirDespesa(id) {
+    // Mostra uma caixa de diálogo de confirmação
+    const confirmacao = window.confirm('Deseja realmente excluir esta despesa?');
+  
+    // Se o usuário confirmar, prossegue com a exclusão
+    if (confirmacao) {
+        axios.delete('http://127.0.0.1:5000/delete', { data: { id } })
+            .then(function (response) {
+                console.log(response.data);
+  
+                // Recarrega a tabela
+                carregarDespesas();
+            })
+            .catch(function (error) {
+                console.error('Erro ao excluir despesa:', error.message);
+            });
+    }
+  }
+  async function editarDespesa(id, despesaAtual, valorAtual) {
+    const novoDespesa = prompt('Digite a nova despesa:', despesaAtual);
+    const novoValor = parseFloat(prompt('Digite o novo valor:', valorAtual).replace(',', '.'));
+  
+    if (!novoDespesa || isNaN(novoValor)) {
+        alert('Preencha os campos corretamente.');
+        return;
+    }
+  
+    try {
+        const response = await axios.put(`http://127.0.0.1:5000/update/${id}`, { despesa: novoDespesa, valor: novoValor });
+        console.log(response.data);
+  
+        // Recarrega a tabela
+        carregarDespesas();
+    } catch (error) {
+        console.error('Erro ao editar despesa:', error.message);
+    }
+  }
+  async function editarSalario() {
     const novoSalarioInput = document.getElementById('edit-salary-input');
     const novoSalario = parseFloat(novoSalarioInput.value.replace(',', '.'));
 
@@ -141,11 +173,3 @@ async function editarSalario() {
         console.error('Erro ao editar salário:', error.message);
     }
 }
-
-
-
-// Carrega as despesas ao carregar a página
-carregarDespesas();
-// Adiciona um ouvinte de evento ao botão de adicionar no modal
-document.querySelector("#addDespesaBtn").addEventListener("click", adicionarDespesa);
-
