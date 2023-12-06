@@ -2,12 +2,21 @@
 
 // Função para carregar as despesas na tabela
 async function carregarDespesas() {
-  try {
-      const response = await axios.get('http://127.0.0.1:5000/list');
-      const despesas = response.data;
+    try {
+        // Carrega as despesas
+        const responseDespesas = await axios.get('http://127.0.0.1:5000/list');
+        const despesas = responseDespesas.data;
 
-      const tabela = document.querySelector('.tabela-js');
-      tabela.innerHTML = '';
+        // Carrega o salário
+        const responseSalario = await axios.get('http://127.0.0.1:5000/list_salary');
+        const salario = responseSalario.data[0]; // Assume que há apenas um salário na lista
+
+        // Atualiza o salário exibido no modal principal
+        document.getElementById('user-salary').innerText = salario.SALARIO.toFixed(2);
+
+        // Atualiza a tabela de despesas
+        const tabela = document.querySelector('.tabela-js');
+        tabela.innerHTML = '';
 
       despesas.forEach(despesa => {
           const tr = document.createElement('tr');
@@ -108,65 +117,31 @@ async function adicionarDespesa() {
     console.error('Erro ao adicionar despesa:', error.message);
   }
 }
-
-async function carregarSalario() {
-  try {
-      const response = await axios.get('http://127.0.0.1:5000/list_salary');
-      const salarios = response.data;
-
-      if (salarios.length > 0) {
-          const ultimoSalario = salarios[salarios.length - 1].SALARIO;
-          document.getElementById('user-salary').textContent = ultimoSalario.toFixed(2);
-      } else {
-          // Caso o usuário não tenha salário cadastrado
-          document.getElementById('user-salary').textContent = 'N/A';
-      }
-  } catch (error) {
-      console.error('Erro ao carregar salário:', error.message);
-  }
-}
+// Função para editar o salário
 async function editarSalario() {
-  const novoSalario = parseFloat(document.getElementById('edit-salary-input').value.replace(',', '.'));
+    const novoSalarioInput = document.getElementById('edit-salary-input');
+    const novoSalario = parseFloat(novoSalarioInput.value.replace(',', '.'));
 
-  if (isNaN(novoSalario)) {
-      alert('Por favor, insira um valor válido para o salário.');
-      return;
-  }
+    if (isNaN(novoSalario)) {
+        alert('Digite um valor válido para o salário.');
+        return;
+    }
 
-  try {
-      const response = await axios.put('http://127.0.0.1:5000/update_salary', { salario: novoSalario });
-      console.log(response.data);
+    try {
+        const response = await axios.put('http://127.0.0.1:5000/update_salary', { salario: novoSalario });
+        console.log(response.data);
 
-      // Recarrega o salário após a edição
-      carregarSalario();
+        // Atualiza o salário exibido no modal principal
+        document.getElementById('user-salary').innerText = novoSalario.toFixed(2);
 
-      // Fecha o modal de edição
-      const modalEditSalary = new bootstrap.Modal(document.getElementById('modalEditSalary'));
-      modalEditSalary.hide();
-  } catch (error) {
-      console.error('Erro ao editar salário:', error.message);
-  }
-}
-async function carregarSalario() {
-  try {
-      const response = await axios.get('http://127.0.0.1:5000/list_salary');
-      const salarios = response.data;
-
-      if (salarios.length > 0) {
-          const ultimoSalario = salarios[salarios.length - 1].SALARIO;
-          document.getElementById('user-salary').textContent = ultimoSalario.toFixed(2);
-      } else {
-          // Caso o usuário não tenha salário cadastrado
-          document.getElementById('user-salary').textContent = 'N/A';
-      }
-  } catch (error) {
-      console.error('Erro ao carregar salário:', error.message);
-  }
+        // Fecha o modal de edição de salário
+        const modal = new bootstrap.Modal(document.getElementById('modalEditSalary'));
+        modal.hide();
+    } catch (error) {
+        console.error('Erro ao editar salário:', error.message);
+    }
 }
 
-
-// Chame a função para carregar o salário ao carregar a página
-carregarSalario();
 
 
 // Carrega as despesas ao carregar a página
