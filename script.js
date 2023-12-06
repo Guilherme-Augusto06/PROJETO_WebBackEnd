@@ -67,6 +67,23 @@ async function carregarGrafico() {
         // Obtém o contexto do canvas
         const ctx = document.getElementById('donutChart').getContext('2d');
 
+        // Calcula a porcentagem de despesas em relação ao salário
+        const porcentagemDespesas = (totalDespesas / salario.SALARIO) * 100;
+
+        // Define a cor com base nas porcentagens
+        let cor;
+        let mensagem;
+        if (porcentagemDespesas < 50) {
+            cor = 'rgba(0, 255, 0, 0.8)'; // Verde
+            mensagem = 'Gastos abaixo de 50% do salário';
+        } else if (porcentagemDespesas < 70) {
+            cor = 'rgba(255, 255, 0, 0.8)'; // Amarelo
+            mensagem = 'Gastos entre 50% e 70% do salário';
+        } else {
+            cor = 'rgba(255, 0, 0, 0.8)'; // Vermelho
+            mensagem = 'Gastos acima de 70% do salário';
+        }
+
         // Cria o gráfico de rosca
         const myChart = new Chart(ctx, {
             type: 'doughnut',
@@ -74,7 +91,7 @@ async function carregarGrafico() {
                 labels: ['Salário', 'Despesas'],
                 datasets: [{
                     data: [salario.SALARIO, totalDespesas],
-                    backgroundColor: ['rgba(153, 102, 255, 0.8)', 'rgba(75, 192, 192, 0.8)'],
+                    backgroundColor: [cor, 'rgba(75, 192, 192, 0.8)'],
                 }],
             },
             options: {
@@ -86,10 +103,18 @@ async function carregarGrafico() {
                 },
             },
         });
+
+        // Adiciona a mensagem abaixo do gráfico
+        const mensagemElement = document.getElementById('mensagemGastos');
+        mensagemElement.innerText = mensagem;
+        mensagemElement.style.color = cor;
     } catch (error) {
         console.error('Erro ao carregar gráfico:', error.message);
     }
 }
+
+// Carrega o gráfico ao carregar a página
+carregarGrafico();
 
 // Carrega o gráfico ao carregar a página
 carregarGrafico();
