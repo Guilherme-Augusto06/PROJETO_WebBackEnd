@@ -107,6 +107,29 @@ def deleteDespesa():
     if id not in financas['ID'].values:
         return jsonify({"error": "Despesa não encontrada"}), 404
 
+    # Obtém o valor da despesa a ser excluída
+    valor_despesa = financas.loc[financas['ID'] == id, 'VALOR'].values[0]
+
+    # Lê o arquivo Salarios.csv e converte para um DataFrame
+    try:
+        salarios = pd.read_csv('Salarios.csv')
+    except FileNotFoundError:
+        return jsonify({"error": "Salário não cadastrado"}), 404
+
+    # Verifica se há salários cadastrados
+    if salarios.empty:
+        return jsonify({"error": "Salário não cadastrado"}), 404
+
+    # Obtém o último salário cadastrado
+    ultimo_salario = salarios['SALARIO'].iloc[-1]
+
+    # Adiciona o valor da despesa de volta ao salário
+    novo_salario = ultimo_salario + valor_despesa
+
+    # Atualiza o último salário no arquivo Salarios.csv
+    salarios.loc[salarios.index[-1], 'SALARIO'] = novo_salario
+    salarios.to_csv('Salarios.csv', index=False)
+
     # Remove a despesa com o ID fornecido
     financas = financas.drop(financas[financas['ID'] == id].index)
 
