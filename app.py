@@ -211,6 +211,9 @@ def sumDespesas():
     # Soma os valores das despesas
     total = financas['VALOR'].sum()
 
+    # Converte o valor para um tipo nativo do Python
+    total = float(total)
+
     # Retorna o total em formato JSON
     return jsonify({"total": total})
 
