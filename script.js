@@ -178,12 +178,13 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('edit-despesa').value = despesaAtual;
         document.getElementById('edit-valor').value = valorAtual.toFixed(2);
         
-        // Exibe a modal de edição
-        const modalEdit = new bootstrap.Modal(document.getElementById('modalEdit'));
-        modalEdit.show();
         
         // Define o ID da despesa que está sendo editada
         document.getElementById('editDespesaBtn').dataset.id = id;
+        document.getElementById('cancelarEdicaoBtn').addEventListener('click', function() {
+            const modalEdit = new bootstrap.Modal(document.getElementById('modalEdit'));
+            modalEdit.hide();
+        });
     }
     async function editarDespesaConfirmado() {
         const id = document.getElementById('editDespesaBtn').dataset.id;
