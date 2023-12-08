@@ -42,14 +42,6 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
     
-    // Função para adicionar uma nova despesa
-    
-    
-    // Função para editar uma despesa
-    
-    
-    // Função para excluir uma despesa
-    // Função para excluir uma despesa
     
     async function carregarGrafico() {
         try {
@@ -71,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const myChart = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Salário', 'Despesas'],
+                    labels: ['Saldo atual \n R$:', 'Despesas \n R$:'],
                     datasets: [{
                         data: [salario.SALARIO, totalDespesas],
                         backgroundColor: ['rgba(153, 102, 255, 0.8)', 'rgba(75, 192, 192, 0.8)'],
@@ -113,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const responseSalario = await axios.get('http://127.0.0.1:5000/list_salary');
             const salario = responseSalario.data[0]; // Assume que há apenas um salário na lista
             // Verifica se o salário é suficiente para cobrir a despesa
-            if (salario.SALARIO < valor) {
+            if (salario.SALARIO <= 0 || salario.SALARIO < valor) {
                 errorMessage.innerText = 'Salário insuficiente para cobrir a despesa.';
                 return;
             }
@@ -156,6 +148,14 @@ document.addEventListener('DOMContentLoaded', function() {
     
     });
     function excluirDespesa(id) {
+        // Define o ID da despesa que está sendo excluída
+        document.getElementById('deleteDespesaBtn').dataset.id = id;
+        
+        // Exibe a modal de exclusão
+        const modalDel = new bootstrap.Modal(document.getElementById('modalDel'));
+        modalDel.show();
+    }
+    function excluirDespesa(id) {
         // Mostra uma caixa de diálogo de confirmação
         const confirmacao = window.confirm('Deseja realmente excluir esta despesa?');
       
@@ -173,25 +173,42 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
         }
       }
-      async function editarDespesa(id, despesaAtual, valorAtual) {
-        const novoDespesa = prompt('Digite a nova despesa:', despesaAtual);
-        const novoValor = parseFloat(prompt('Digite o novo valor:', valorAtual).replace(',', '.'));
-      
+      function editarDespesa(id, despesaAtual, valorAtual) {
+        // Preenche os campos da modal de edição
+        document.getElementById('edit-despesa').value = despesaAtual;
+        document.getElementById('edit-valor').value = valorAtual.toFixed(2);
+        
+        // Exibe a modal de edição
+        const modalEdit = new bootstrap.Modal(document.getElementById('modalEdit'));
+        modalEdit.show();
+        
+        // Define o ID da despesa que está sendo editada
+        document.getElementById('editDespesaBtn').dataset.id = id;
+    }
+    async function editarDespesaConfirmado() {
+        const id = document.getElementById('editDespesaBtn').dataset.id;
+        const novoDespesa = document.getElementById('edit-despesa').value;
+        const novoValor = parseFloat(document.getElementById('edit-valor').value.replace(',', '.'));
+    
         if (!novoDespesa || isNaN(novoValor)) {
             alert('Preencha os campos corretamente.');
             return;
         }
-      
+    
         try {
             const response = await axios.put(`http://127.0.0.1:5000/update/${id}`, { despesa: novoDespesa, valor: novoValor });
             console.log(response.data);
-      
+    
             // Recarrega a tabela
             carregarDespesas();
+    
+            // Fecha a modal de edição
+            const modalEdit = new bootstrap.Modal(document.getElementById('modalEdit'));
+            modalEdit.hide();
         } catch (error) {
             console.error('Erro ao editar despesa:', error.message);
         }
-      }
+    }
       async function editarSalario() {
         const novoSalarioInput = document.getElementById('edit-salary-input');
         const novoSalario = parseFloat(novoSalarioInput.value.replace(',', '.'));
@@ -215,4 +232,25 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Erro ao editar salário:', error.message);
         }
     }
+    async function mostrarGastosMensais() {
+        try {
+            // Faz a requisição para obter a soma de todas as despesas
+            const responseTotalDespesas = await axios.get('http://127.0.0.1:5000/sum');
+            const totalDespesas = responseTotalDespesas.data.total;
     
+            // Exibe a soma na modal de gastos mensais
+            const modalGastosMensais = new bootstrap.Modal(document.getElementById('Modal2'));
+            const modalBody = modalGastosMensais._element.querySelector('.modal-body');
+            modalBody.innerHTML = `<p>Total de Gastos Mensais: R$ ${totalDespesas.toFixed(2)}</p>`;
+    
+            // Abre a modal
+            modalGastosMensais.show();
+            // fecha a modal
+            
+        } catch (error) {
+            console.error('Erro ao carregar gastos mensais:', error.message);
+        }
+    }
+    
+    // Adiciona um ouvinte de evento ao botão de gastos mensais no modal principal
+document.querySelector("#btn-gastos-mensais").addEventListener("click", mostrarGastosMensais);
