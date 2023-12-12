@@ -7,55 +7,86 @@
   <link rel="stylesheet" href="faq.css">
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <title>FAQ - Sistemas Financeiros</title>
 </head>
 
 <body>
-  <header class="navbar">
-    <div class="container">
-      <h1 class="mf">
-        <span class="material-symbols-outlined">
-          currency_bitcoin
-        </span>
-        <a class="a" href="./index.html">Finanças em Foco</a>
-      </h1>
-    </div>
+
+  <header>
+    <nav class="navbar">
+      <div class="container">
+
+        <h1 class="mf">
+          <span class="material-symbols-outlined">
+            currency_bitcoin
+          </span>
+          <a class="a" href="index.html">
+            FAQ
+          </a>
+        </h1>
+
+      </div>
+    </nav>
   </header>
 
-  <div class="faq-container">
-    <h1>FAQ - Sistemas Financeiros</h1>
-
-    <div class="faq-item" onmouseover="expandBox(this)" onmouseout="shrinkBox(this)">
-      <h3 class="question">Como posso visualizar meu extrato financeiro?</h3>
-      <p class="answer">Você pode acessar seu extrato financeiro através da opção salário da nossa plataforma, na seção
-        de contas.</p>
-    </div>
-
-    <div class="faq-item" onmouseover="expandBox(this)" onmouseout="shrinkBox(this)">
-      <h3 class="question">Existe um limite para o número de despesas que posso adicionar?</h3>
-      <p class="answer">Não, não há limite para o número de despesas que você pode adicionar. Registre quantas forem
-        necessárias para um controle completo.</p>
-    </div>
-
-    <div class="faq-item" onmouseover="expandBox(this)" onmouseout="shrinkBox(this)">
-      <h3 class="question">Como o site calcula a soma dos meus gastos mensais?</h3>
-      <p class="answer">A soma dos gastos mensais é calculada automaticamente com base nas despesas registradas no mês
-        em questão.</p>
-    </div>
+  <div class="container2">
+    <div class="faq-container">
+      <h1>FAQ - Sistemas Financeiros</h1>
 
 
-    <div>
       <div class="faq-item" onmouseover="expandBox(this)" onmouseout="shrinkBox(this)">
-        <h3 class="question">Como posso editar ou excluir uma transação já registrada?</h3>
-        <p class="answer">Acesse a seção de despesas e selecione a transação desejada. Lá, você encontrará opções para
-          editar detalhes ou excluí-la.
-        </p>
+        <h3 class="question">O que é o Finanças em Foco?</h3>
+        <p class="answer">Finanças em Foco é um aplicativo de gerenciamento de finanças pessoais que permite adicionar,
+          editar e excluir despesas. Além disso, oferece recursos para visualizar seu salário, editá-lo, e proporciona
+          uma visão geral dos seus gastos mensais por meio de gráficos informativos.</p>
       </div>
 
 
-    </div>
+      <div class="faq-item" onmouseover="expandBox(this)" onmouseout="shrinkBox(this)">
+        <h3 class="question">Como adiciono uma despesa?</h3>
+        <p class="answer">Na página de despesas, clique no botão "Adicionar Despesa" e preencha as informações
+          necessárias, como valor, categoria e data. Confirme para salvar.</p>
+      </div>
 
-    <script src="script.js"></script>
+      <div class="faq-item" onmouseover="expandBox(this)" onmouseout="shrinkBox(this)">
+        <h3 class="question">Posso editar ou excluir uma despesa?</h3>
+        <p class="answer">Sim, na página de despesas, você pode editar uma despesa clicando no botão de edição
+          correspondente. Para excluir, utilize o botão de exclusão. Lembre-se de confirmar as alterações.</p>
+      </div>
+
+      <div class="faq-item" onmouseover="expandBox(this)" onmouseout="shrinkBox(this)">
+        <h3 class="question">Como faço para visualizar e editar meu salário?</h3>
+        <p class="answer">Vá para a seção de salário, onde você pode visualizar seu salário atual. Para editá-lo, clique
+          no botão de edição e insira o novo valor. Certifique-se de salvar as alterações.</p>
+      </div>
+
+      <div class="faq-item" onmouseover="expandBox(this)" onmouseout="shrinkBox(this)">
+        <h3 class="question">O Finanças em Foco possui recursos de gastos mensais?</h3>
+        <p class="answer">Sim, na seção de visão geral, você encontrará gráficos informativos que mostram a relação
+          entre suas despesas e o salário. Esses gráficos oferecem uma compreensão visual dos seus gastos mensais.</p>
+      </div>
+
+      <div class="faq-item" onmouseover="expandBox(this)" onmouseout="shrinkBox(this)">
+        <h3 class="question">Posso personalizar as categorias de despesas?</h3>
+        <p class="answer">Sim, Finanças em Foco permite a personalização das categorias de despesas. Na página de
+          configurações, você pode adicionar, editar ou excluir categorias conforme suas necessidades.</p>
+      </div>
+
+
+
+
+
+
+
+
+
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </body>
 
 </html>
