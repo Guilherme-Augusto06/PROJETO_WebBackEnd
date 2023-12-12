@@ -74,6 +74,9 @@ document.addEventListener('DOMContentLoaded', function() {
             legend: {
               display: true,
               position: 'bottom',
+              labels: {
+                color: '#fff', // Define a cor do texto da legenda como brancoa
+              },
             },
           },
         },
@@ -250,7 +253,7 @@ async function mostrarGastosMensais() {
     const totalDespesas = responseTotalDespesas.data.total;
 
     // Exibe a soma na modal de gastos mensais
-    
+
     const modalGastosMensais = new bootstrap.Modal(document.getElementById('Modal2'));
     const modalBody = modalGastosMensais._element.querySelector('.modal-body');
     modalBody.innerHTML = `<p>Total de Gastos Mensais: R$ ${totalDespesas.toFixed(2)}</p>`;
@@ -258,7 +261,7 @@ async function mostrarGastosMensais() {
     // Abre a modal
     modalGastosMensais.show();
     // fecha a modal
-  
+
   } catch (error) {
     console.error('Erro ao carregar gastos mensais:', error.message);
   }
