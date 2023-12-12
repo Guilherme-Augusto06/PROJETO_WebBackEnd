@@ -4,7 +4,7 @@ body {
   padding: 0;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(180deg, rgba(35, 71, 103, 1) 10%, rgba(8, 121, 181, 1) 63%, rgba(21, 129, 196, 1) 100%);
+  background: linear-gradient(#13293d, #006494, #247ba0, #1b98e0);
 }
 
 .faq-container {
@@ -12,6 +12,7 @@ body {
   width: 100%;
   padding: 30px;
   background: linear-gradient(#13293d, #006494, #247ba0, #1b98e0);
+  border: 1px solid #2b7dc6;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   color: #ffffff;
